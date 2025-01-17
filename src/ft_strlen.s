@@ -2,13 +2,13 @@
 		global ft_strlen
 
 ft_strlen:
-		mov rax, 0
+		xor rax, rax
 
-loop:
+.loop:
 		cmp BYTE [rdi + rax], 0
-		je out
+		je .out
 		inc rax
-		jmp loop
+		jmp .loop
 
-out:
+.out:
 		ret

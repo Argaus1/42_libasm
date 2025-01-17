@@ -2,7 +2,7 @@ NAME := libasm.a
 
 SRC_DIR := src
 
-SRC_FILES := ft_strlen.s
+SRC_FILES := ft_strlen.s ft_strcmp.s
 
 SRC := $(SRC_FILES:%.s=$(SRC_DIR)/%.s)
 
@@ -37,6 +37,7 @@ test:
 	@bash scripts/test_build.sh
 	@echo "test exec ready"
 
+gen: all test
 
 clean:
 	@rm -rf $(BUILD_DIR)
@@ -55,6 +56,8 @@ re: fclean all
 tre: tclean test
 
 gclean: fclean tclean
+
+rgen: gclean gen
 
 subject:
 	@xdg-open 'https://cdn.intra.42.fr/pdf/pdf/148904/en.subject.pdf'
