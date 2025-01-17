@@ -14,7 +14,7 @@
 make // will build the libasm.a binary
 ```
 ```
-make test // will build the test binary and cp the excutable in the project root
+make test // will build the test binary and cp the executable in the project root
 ```
 ```
 make clean // will delete the .build dir in the root of the repo

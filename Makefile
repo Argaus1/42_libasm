@@ -46,16 +46,18 @@ fclean: clean
 	@rm -rf $(NAME)
 	@echo "libasm bin deleted"
 
-test_clean:
+tclean:
 	@bash scripts/test_clean.sh
 	@echo $(TEST_DIR) cleaned
 
 re: fclean all
 
-test_re: test_clean test
+tre: tclean test
+
+gclean: fclean tclean
 
 subject:
 	@xdg-open 'https://cdn.intra.42.fr/pdf/pdf/148904/en.subject.pdf'
 
-.PHONY: all clean fclean re test test_clean test_re
+.PHONY: all clean fclean re test tclean tre gclean
 
