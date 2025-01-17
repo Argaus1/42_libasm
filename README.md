@@ -1,3 +1,5 @@
+First post cc project at 42
+
 # Doc
 
 - [Stanford-Guide to x86-64](https://web.stanford.edu/class/cs107/guide/x86-64.html)
@@ -27,4 +29,13 @@ make tclean // will delete the test exec, and run cargo clean in the test dir
 ```
 ```
 make gclean // will run fclean and tclean
+```
+```
+make gen // will compile the lib and the tests
+```
+```
+make gre
+```
+```
+make tre
 ```

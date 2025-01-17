@@ -57,10 +57,10 @@ tre: tclean test
 
 gclean: fclean tclean
 
-rgen: gclean gen
+gre: gclean gen
 
 subject:
 	@xdg-open 'https://cdn.intra.42.fr/pdf/pdf/148904/en.subject.pdf'
 
-.PHONY: all clean fclean re test tclean tre gclean
+.PHONY: all clean fclean re test tclean tre gclean gre gen
 
