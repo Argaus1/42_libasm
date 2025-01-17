@@ -13,3 +13,18 @@
 ```
 make // will build the libasm.a binary
 ```
+```
+make test // will build the test binary and cp the excutable in the project root
+```
+```
+make clean // will delete the .build dir in the root of the repo
+```
+```
+make fclean // will delete the libasm.a bin
+```
+```
+make tclean // will delete the test exec, and run cargo clean in the test dir
+```
+```
+make gclean // will run fclean and tclean
+```
