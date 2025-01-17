@@ -2,7 +2,7 @@ NAME := libasm.a
 
 SRC_DIR := src
 
-SRC_FILES := ft_strlen.s ft_strcmp.s
+SRC_FILES := ft_strlen.s ft_strcmp.s ft_strcpy.s
 
 SRC := $(SRC_FILES:%.s=$(SRC_DIR)/%.s)
 
