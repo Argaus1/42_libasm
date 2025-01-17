@@ -10,30 +10,33 @@ BUILD_DIR := .build
 
 OBJ := $(SRC:$(SRC_DIR)/%.s=$(BUILD_DIR)/%.o)
 
-#DEPS := $(OBJ:.o=.d)
 
 NASM := nasm
 NASMFLAGS := -f elf64
 
-#CFLAGS := -Wall -Wextra -Werror
-#PREPFLAGS := -MMD -MP -I headers
 AR := ar
 ARFLAGS := -rcs
 
 DIR_DUP = mkdir -p $(@D)
 
+TEST_DIR := test_libasm
+
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	@$(AR) $(ARFLAGS) $(NAME) $(OBJ)
-	@cp $(NAME) test_libasm/
-	@echo "libasm ready and copied"
+	@echo "libasm ready"
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
 	@$(DIR_DUP)
 	@$(NASM) $(NASMFLAGS) -o $@ $<
 
-#-include $(DEPS)
+test:
+	@cp $(NAME) $(TEST_DIR)/
+	@echo "libasm.a copied into $(TEST_DIR)"
+	@bash scripts/test_build.sh
+	@echo "test exec ready"
+
 
 clean:
 	@rm -rf $(BUILD_DIR)
@@ -41,14 +44,18 @@ clean:
 
 fclean: clean
 	@rm -rf $(NAME)
-	@rm test_libasm/$(NAME)
 	@echo "libasm bin deleted"
-	@echo "libasm bin in rust project deleted"
+
+test_clean:
+	@bash scripts/test_clean.sh
+	@echo $(TEST_DIR) cleaned
 
 re: fclean all
+
+test_re: test_clean test
 
 subject:
 	@xdg-open 'https://cdn.intra.42.fr/pdf/pdf/148904/en.subject.pdf'
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re test test_clean test_re
 

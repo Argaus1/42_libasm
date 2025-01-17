@@ -5,3 +5,11 @@
 - [Notes on x86-64 programming](https://usr.lmf.cnrs.fr/~jcf/ens/compil/x86-64.pdf)
 - [Reverse Engineering For Everyone](https://0xinfection.github.io/reversing/reversing-for-everyone.pdf)
 - [System V Application Binary Interface](https://refspecs.linuxbase.org/elf/x86_64-abi-0.99.pdf)
+
+# Building the project
+
+## Build the lib
+
+```
+make // will build the libasm.a binary
+```
