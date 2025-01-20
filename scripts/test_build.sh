@@ -2,10 +2,11 @@
 
 cd test_libasm
 
-cargo build --release
+# cargo build --release
+cargo test
 
 echo building test executable...
 
-sleep 3
+sleep 0.5
 
-cp target/release/test_libasm ../test
+# cp target/release/test_libasm ../test
