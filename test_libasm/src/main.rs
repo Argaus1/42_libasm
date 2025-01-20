@@ -1,5 +1,5 @@
 use std::ffi::{CString, CStr};
-use std::os::raw::{c_char, c_ulonglong};
+use std::os::raw::{c_char, c_ulonglong, c_int};
 //use std::ptr;
 
 extern "C" {
@@ -9,12 +9,11 @@ extern "C" {
     fn ft_strcpy(dest: *mut c_char, src: *const c_char) -> *mut c_char;
     fn strcpy(dest: *mut c_char, src: *const c_char) -> *mut c_char;
 
-    // fn ft_strcmp(s1: *const u8, s2: *const u8) -> c_int;
-    // fn strcmp(s1: *const u8, s2: *const u8) -> c_int;
+    fn ft_strcmp(s1: *const c_char, s2: *const c_char) -> c_int;
+    fn strcmp(s1: *const c_char, s2: *const c_char) -> c_int;
 }
 
 fn rust_strcpy(dest: &mut [u8], src: &str, f: unsafe extern "C" fn(*mut c_char, *const c_char) -> *mut c_char) -> String {
-    // Ensure the source is null-terminated
     let src_c = CString::new(src).expect("Failed to create CString");
     let dest_ptr = dest.as_mut_ptr() as *mut c_char;
 
@@ -31,6 +30,16 @@ fn rust_strlen(src: &str, f: unsafe extern "C" fn(*const c_char) -> c_ulonglong)
     unsafe {
         let res_c = f(src_c.as_ptr());
         res_c as usize
+    }
+}
+
+fn rust_strcmp(str1: &str, str2: &str, f: unsafe extern "C" fn(*const c_char, *const c_char) -> c_int) -> i32 {
+    let str1_c = CString::new(str1).expect("Failed to create CString");
+    let str2_c = CString::new(str2).expect("Failed to create CString");
+
+    unsafe {
+        let result = f(str1_c.as_ptr(), str2_c.as_ptr());
+        result as i32
     }
 }
 
@@ -112,6 +121,66 @@ mod tests {
     }
 
     // STRCMP
+
+    #[test]
+    fn test_strcmp_equal() {
+        let s1 = "zouzou";
+        let s2 = "zouzou";
+        let result_ft_strcmp = rust_strcmp(s1, s2, ft_strcmp);
+        let result_strcmp = rust_strcmp(s1, s2, strcmp);
+        assert_eq!(result_ft_strcmp, result_strcmp);
+    }
+
+    #[test]
+    fn test_strcmp_not_equal() {
+        let s1 = "zouzou";
+        let s2 = "zouzov";
+        let result_ft_strcmp = rust_strcmp(s1, s2, ft_strcmp);
+        let result_strcmp = rust_strcmp(s1, s2, strcmp);
+        assert_eq!(result_ft_strcmp, result_strcmp);
+    }
+
+    #[test]
+    fn test_strcmp_first_one_empty() {
+        let s1 = "";
+        let s2 = "zouzou";
+        let result_ft_strcmp = rust_strcmp(s1, s2, ft_strcmp);
+        let result_strcmp = rust_strcmp(s1, s2, strcmp);
+        assert_eq!(result_ft_strcmp, result_strcmp);
+    }
+
+    #[test]
+    fn test_strcmp_scnd_one_empty() {
+        let s1 = "";
+        let s2 = "zouzou";
+        let result_ft_strcmp = rust_strcmp(s1, s2, ft_strcmp);
+        let result_strcmp = rust_strcmp(s1, s2, strcmp);
+        assert_eq!(result_ft_strcmp, result_strcmp);
+    }
     
+    #[test]
+    fn test_strcmp_two_empty() {
+        let s1 = "";
+        let s2 = "";
+        let result_ft_strcmp = rust_strcmp(s1, s2, ft_strcmp);
+        let result_strcmp = rust_strcmp(s1, s2, strcmp);
+        assert_eq!(result_ft_strcmp, result_strcmp);
+    }
+
+    #[test]
+    fn test_strcmp_special_chars() {
+        let s1 = "Hello\nWorld\t!";
+        let s2 = "Hello\nWorld\t!";
+        let result_ft_strcmp = rust_strcmp(s1, s2, ft_strcmp);
+        let result_strcmp = rust_strcmp(s1, s2, strcmp);
+        assert_eq!(result_ft_strcmp, result_strcmp);
+    }
+
+    // WRITE
+
+    // basic
+    // neg fd
+    // neg nbr of char
+    // empty string
 }
 

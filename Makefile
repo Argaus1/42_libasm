@@ -2,7 +2,7 @@ NAME := libasm.a
 
 SRC_DIR := src
 
-SRC_FILES := ft_strlen.s ft_strcmp.s ft_strcpy.s
+SRC_FILES := ft_strlen.s ft_strcmp.s ft_strcpy.s ft_write.s
 
 SRC := $(SRC_FILES:%.s=$(SRC_DIR)/%.s)
 
@@ -32,8 +32,8 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
 	@$(NASM) $(NASMFLAGS) -o $@ $<
 
 test:
-	@cp $(NAME) $(TEST_DIR)/
-	@echo "libasm.a copied into $(TEST_DIR)"
+	#@cp $(NAME) $(TEST_DIR)/
+	#@echo "libasm.a copied into $(TEST_DIR)"
 	@bash scripts/test_build.sh
 	@echo "test exec ready"
 
@@ -60,7 +60,7 @@ gclean: fclean tclean
 gre: gclean gen
 
 subject:
-	@xdg-open 'https://cdn.intra.42.fr/pdf/pdf/148904/en.subject.pdf'
+	@xdg-open 'https://cdn.intra.42.fr/pdf/pdf/133629/en.subject.pdf'
 
 .PHONY: all clean fclean re test tclean tre gclean gre gen
 
