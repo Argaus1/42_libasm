@@ -35,7 +35,6 @@ test:
 	#@cp $(NAME) $(TEST_DIR)/
 	#@echo "libasm.a copied into $(TEST_DIR)"
 	@bash scripts/test_build.sh
-	@echo "test exec ready"
 
 gen: all test
 
