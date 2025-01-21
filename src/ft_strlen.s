@@ -12,3 +12,5 @@ ft_strlen:
 
 .out:
 		ret
+
+section .note.GNU-stack noalloc progbits

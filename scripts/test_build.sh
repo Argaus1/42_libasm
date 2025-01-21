@@ -21,6 +21,7 @@ case $testchoice in
     "strlen") cargo test strlen;;
     "strcpy") cargo test strcpy;;
     "strcmp") cargo test strcmp;;
+    "write") cargo test write;;
     *) echo "This test is not available";;
 esac
 

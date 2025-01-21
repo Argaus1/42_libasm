@@ -1,6 +1,8 @@
 use std::ffi::{CString, CStr};
-use std::os::raw::{c_char, c_ulonglong, c_int};
+use std::os::raw::{c_char, c_ulonglong, c_longlong, c_int, c_void};
 //use std::ptr;
+use std::fs;
+use std::os::fd::AsRawFd;
 
 extern "C" {
     fn ft_strlen(src: *const c_char) -> c_ulonglong;
@@ -11,6 +13,9 @@ extern "C" {
 
     fn ft_strcmp(s1: *const c_char, s2: *const c_char) -> c_int;
     fn strcmp(s1: *const c_char, s2: *const c_char) -> c_int;
+
+    fn ft_write(fd: c_int, buf: *const c_void, count: c_ulonglong) -> c_longlong;
+    fn write(fd: c_int, buf: *const c_void, count: c_ulonglong) -> c_longlong;
 }
 
 fn rust_strcpy(dest: &mut [u8], src: &str, f: unsafe extern "C" fn(*mut c_char, *const c_char) -> *mut c_char) -> String {
@@ -40,6 +45,15 @@ fn rust_strcmp(str1: &str, str2: &str, f: unsafe extern "C" fn(*const c_char, *c
     unsafe {
         let result = f(str1_c.as_ptr(), str2_c.as_ptr());
         result as i32
+    }
+}
+
+fn rust_write(fd: i32, buf: &str, len: usize, f: unsafe extern "C" fn(c_int, *const c_void, c_ulonglong) -> c_longlong) -> i64 {
+    let len_c = len as u64;
+
+    unsafe {
+        let result = f(fd, buf.as_bytes().as_ptr() as *const c_void, len_c);
+        result as i64
     }
 }
 
@@ -178,9 +192,61 @@ mod tests {
 
     // WRITE
 
-    // basic
-    // neg fd
+    #[test]
+    fn test_write_basic_stdout() {
+        let s1 = "write_basic_stdout";
+        let result_ft_write = rust_write(1, s1, s1.len(), ft_write);
+        let result_write = rust_write(1, s1, s1.len(), write);
+        assert_eq!(result_ft_write, result_write);
+    }
+
+    #[test]
+    fn test_write_empty() {
+        let s1 = "";
+        let result_ft_write = rust_write(1, s1, s1.len(), ft_write);
+        let result_write = rust_write(1, s1, s1.len(), write);
+        assert_eq!(result_ft_write, result_write);
+    }
+
+    #[test]
+    fn test_write_neg_fd() {
+        let s1 = "neg_fd";
+        let result_ft_write = rust_write(-1, s1, s1.len(), ft_write);
+        let result_write = rust_write(-1, s1, s1.len(), write);
+        assert_eq!(result_ft_write, result_write);
+    }
+
+    #[test]
+    fn test_write_other_fd() -> Result<(), Box<dyn std::error::Error>> {
+        let file = fs::File::create("test.txt")?;
+        let s1 = "write_other_fd";
+        let result_ft_write = rust_write(file.as_raw_fd(), s1, s1.len(), ft_write);
+        let result_write = rust_write(file.as_raw_fd(), s1, s1.len(), write);
+        assert_eq!(result_ft_write, result_write);
+        Ok(())
+    }
+
+    #[test]
+    fn test_write_smaller_nb_char() -> Result<(), Box<dyn std::error::Error>> {
+        let file = fs::File::create("test.txt")?;
+        let s1 = "write_smaller_nb_char";
+        let result_ft_write = rust_write(file.as_raw_fd(), s1, 1, ft_write);
+        let result_write = rust_write(file.as_raw_fd(), s1, 1, write);
+        assert_eq!(result_ft_write, result_write);
+        Ok(())
+    }
+
+    #[test]
+    fn test_write_bigger_nb_char() -> Result<(), Box<dyn std::error::Error>> {
+        let file = fs::File::create("test.txt")?;
+        let s1 = "write_bigger_nb_char";
+        let result_ft_write = rust_write(file.as_raw_fd(), s1, 100, ft_write);
+        let result_write = rust_write(file.as_raw_fd(), s1, 100, write);
+        assert_eq!(result_ft_write, result_write);
+        Ok(())
+    }
+
     // neg nbr of char
-    // empty string
+    // neg fd
 }
 

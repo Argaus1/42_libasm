@@ -10,7 +10,6 @@ BUILD_DIR := .build
 
 OBJ := $(SRC:$(SRC_DIR)/%.s=$(BUILD_DIR)/%.o)
 
-
 NASM := nasm
 NASMFLAGS := -f elf64
 
@@ -32,8 +31,6 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.s
 	@$(NASM) $(NASMFLAGS) -o $@ $<
 
 test:
-	#@cp $(NAME) $(TEST_DIR)/
-	#@echo "libasm.a copied into $(TEST_DIR)"
 	@bash scripts/test_build.sh
 
 gen: all test
@@ -61,5 +58,9 @@ gre: gclean gen
 subject:
 	@xdg-open 'https://cdn.intra.42.fr/pdf/pdf/133629/en.subject.pdf'
 
-.PHONY: all clean fclean re test tclean tre gclean gre gen
+syscall:
+	@xdg-open 'https://github.com/torvalds/linux/blob/master/arch/x86/entry/syscalls/syscall_64.tbl'
+	@xdg-open 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Linux_kernel_System_Call_Interface_and_glibc.svg/1280px-Linux_kernel_System_Call_Interface_and_glibc.svg.png'
+
+.PHONY: all clean fclean re test tclean tre gclean gre gen syscall subject
 
