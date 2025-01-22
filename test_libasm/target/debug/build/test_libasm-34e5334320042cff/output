@@ -1,4 +1,0 @@
-cargo:rustc-link-lib=c
-cargo:rustc-link-search=native=../libasm
-cargo:rustc-link-lib=static=asm
-cargo:rustc-link-arg=-no-pie
