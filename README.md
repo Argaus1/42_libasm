@@ -9,6 +9,8 @@ First post cc project at 42
 - [System V Application Binary Interface](https://refspecs.linuxbase.org/elf/x86_64-abi-0.99.pdf)
 - [System V Calling convention](https://en.wikipedia.org/wiki/X86_calling_conventions#x86-64_calling_conventions)
 - [Conditionnal jump instructions](https://www.philadelphia.edu.jo/academics/qhamarsheh/uploads/Lecture%2018%20Conditional%20Jumps%20Instructions.pdf)
+- [Linux System Call Table for x86 64](https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/)
+- [x86_64 NASM Assembly Quick Reference ("Cheat Sheet")](https://www.cs.uaf.edu/2017/fall/cs301/reference/x86_64.html)
 
 # Building the project
 
