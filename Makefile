@@ -1,45 +1,22 @@
-NAME	=	libasm_tester
-
-SRCS	=	main.c
-
-OBJ_DIR = .o
-OBJTS = $(addprefix $(OBJ_DIR)/, $(SRCS:%.c=%.o))
-LIBASM	=	libasm/libasm.a
-
-RM	=	rm -f
-HEADER =	-I includes 
-LIBS =	-Llibasm/ -lasm
-
-CFLAGS = -Wall -Wextra -Werror -g
-
-$(OBJ_DIR)/%.o: %.c
-	@mkdir -p $(@D)
-	@gcc -fPIE $(CFLAGS) $(HEADER) -c  $< -o $@
-	@if test -s $*.c; then\
-			echo "\033[01m\033[35mCompiling ⌛\033[00m\
-			\033[36m$*.c\033[032m  [OK] ✅ \033[00m";\
-			else \
-			echo "\033[01m\033[33mCompiling \033[00m\
-			\033[36m$*.c\033[00m\  [Error] ❌ \033[00m"; fi
-
-$(NAME): $(OBJTS) $(LIBASM)
-	@cc -o $(NAME) $(OBJTS) $(CFLAGS) $(HEADER) $(LIBS)
-	@echo "\033[01m\033[4;33mCompilation done\033[00m\033[1;31m =▶\033[00m\033[1;32m ./${NAME}\033[00m"
-
-$(LIBASM):
-	@make -C libasm/ -s
-
-all:	${NAME}
+all:
+	@make -C libasm -s
+	@bash scripts/test_build.sh
 
 clean:
-	@${RM} -r $(OBJ_DIR) 
-	@echo "\033[01m\033[31mRemoving objects ...\033[00m"
-	@make -C libasm/ fclean -s
+	@make -C libasm clean 
+	@bash scripts/test_clean.sh
 
-fclean:	clean
-	@${RM} ${NAME}
-	@echo "\033[01m\033[31mRemoving exec : ${NAME} ...\033[00m"
+fclean: clean
+	@make -C libasm fclean
 
-re:	fclean $(LIBASM) all
+re: fclean all
 
-.PHONY: all clean fclean re
+subject:
+	@xdg-open 'https://cdn.intra.42.fr/pdf/pdf/133629/en.subject.pdf'
+
+syscall:
+	@xdg-open 'https://github.com/torvalds/linux/blob/master/arch/x86/entry/syscalls/syscall_64.tbl'
+	@xdg-open 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Linux_kernel_System_Call_Interface_and_glibc.svg/1280px-Linux_kernel_System_Call_Interface_and_glibc.svg.png'
+
+.PHONY: all clean fclean re syscall subject
+
