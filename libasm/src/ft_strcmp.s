@@ -1,4 +1,4 @@
-		section .text
+	section .text
 		global ft_strcmp
 
 ft_strcmp:
@@ -24,3 +24,5 @@ ft_strcmp:
 
 .out:
 		ret
+
+section .note.GNU-stack noalloc progbits

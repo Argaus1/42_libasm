@@ -1,4 +1,4 @@
-    section .text
+section .text
     global ft_read
     ;extern __errno_location
 
@@ -15,3 +15,5 @@ ft_read:
     mov [rax], r8
     mov rax, -1
     ret
+
+section .note.GNU-stack noalloc progbits
