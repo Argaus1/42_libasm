@@ -22,14 +22,6 @@ case $testchoice in
     "strcpy") cargo test strcpy;;
     "strcmp") cargo test strcmp;;
     "write") cargo test write;;
+    "read") cargo test read;;
     *) echo "This test is not available";;
 esac
-
-# cargo build --release
-
-
-#echo building test executable...
-
-# sleep 0.5
-
-# cp target/release/test_libasm ../test

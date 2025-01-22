@@ -3,6 +3,7 @@ use std::os::raw::{c_char, c_ulonglong, c_longlong, c_int, c_void};
 //use std::ptr;
 use std::fs;
 use std::os::fd::AsRawFd;
+use std::io;
 
 extern "C" {
     fn ft_strlen(src: *const c_char) -> c_ulonglong;
@@ -16,6 +17,9 @@ extern "C" {
 
     fn ft_write(fd: c_int, buf: *const c_void, count: c_ulonglong) -> c_longlong;
     fn write(fd: c_int, buf: *const c_void, count: c_ulonglong) -> c_longlong;
+
+    fn ft_read(fd: c_int, buf: *const c_void, count: c_ulonglong) -> c_longlong;
+    fn read(fd: c_int, buf: *const c_void, count: c_ulonglong) -> c_longlong;
 }
 
 fn rust_strcpy(dest: &mut [u8], src: &str, f: unsafe extern "C" fn(*mut c_char, *const c_char) -> *mut c_char) -> String {
@@ -53,6 +57,16 @@ fn rust_write(fd: i32, buf: &str, len: usize, f: unsafe extern "C" fn(c_int, *co
 
     unsafe {
         let result = f(fd, buf.as_bytes().as_ptr() as *const c_void, len_c);
+        result as i64
+    }
+}
+
+fn rust_read(fd: i32, buf: &mut [u8], len: usize, f: unsafe extern "C" fn(c_int, *const c_void, c_ulonglong) -> c_longlong) -> i64 {
+    let len_c = len as u64;
+    let buf_c = buf.as_mut_ptr() as *const c_void;
+
+    unsafe {
+        let result = f(fd, buf_c, len_c);
         result as i64
     }
 }
@@ -218,9 +232,10 @@ mod tests {
 
     #[test]
     fn test_write_other_fd() -> Result<(), Box<dyn std::error::Error>> {
-        let file = fs::File::create("test.txt")?;
+        let file = fs::File::create("write_other_fd.txt")?;
+        let file_2 = fs::File::create("ft_write_other_fd.txt")?;
         let s1 = "write_other_fd";
-        let result_ft_write = rust_write(file.as_raw_fd(), s1, s1.len(), ft_write);
+        let result_ft_write = rust_write(file_2.as_raw_fd(), s1, s1.len(), ft_write);
         let result_write = rust_write(file.as_raw_fd(), s1, s1.len(), write);
         assert_eq!(result_ft_write, result_write);
         Ok(())
@@ -228,9 +243,10 @@ mod tests {
 
     #[test]
     fn test_write_smaller_nb_char() -> Result<(), Box<dyn std::error::Error>> {
-        let file = fs::File::create("test.txt")?;
+        let file = fs::File::create("write_smaller_nb_char.txt")?;
+        let file_2 = fs::File::create("ft_write_smaller_nb_char.txt")?;
         let s1 = "write_smaller_nb_char";
-        let result_ft_write = rust_write(file.as_raw_fd(), s1, 1, ft_write);
+        let result_ft_write = rust_write(file_2.as_raw_fd(), s1, 1, ft_write);
         let result_write = rust_write(file.as_raw_fd(), s1, 1, write);
         assert_eq!(result_ft_write, result_write);
         Ok(())
@@ -238,15 +254,82 @@ mod tests {
 
     #[test]
     fn test_write_bigger_nb_char() -> Result<(), Box<dyn std::error::Error>> {
-        let file = fs::File::create("test.txt")?;
+        let file = fs::File::create("ft_write_bigger_nb_char.txt")?;
+        let file_2 = fs::File::create("write_bigger_nb_char.txt")?;
         let s1 = "write_bigger_nb_char";
         let result_ft_write = rust_write(file.as_raw_fd(), s1, 100, ft_write);
-        let result_write = rust_write(file.as_raw_fd(), s1, 100, write);
+        let result_write = rust_write(file_2.as_raw_fd(), s1, 100, write);
         assert_eq!(result_ft_write, result_write);
         Ok(())
     }
 
-    // neg nbr of char
-    // neg fd
+    // READ
+
+    // #[test]
+    // fn test_read_basic_stdin() {
+    //     let s1 = "read_basic_stdout";
+    //     let result_ft_read = rust_read(0, s1, s1.len(), ft_read);
+    //     let result_read = rust_read(0, s1, s1.len(), read);
+    //     assert_eq!(result_ft_read, result_read);
+    // }
+    #[test]
+    fn test_read_basic_stdin() -> Result<(), Box<dyn std::error::Error>> {
+        let mut dest = [0u8; 100];
+        let result_ft_read = rust_read(0, &mut dest, 100, ft_read);
+        let result_read = rust_read(0, &mut dest, 100, read);
+        assert_eq!(result_ft_read, result_read);
+        Ok(())
+    }
+
+    #[test]
+    fn test_read_basic() -> Result<(), Box<dyn std::error::Error>> {
+        let mut dest = [0u8; 100];
+        let file = fs::File::open("read_other_fd.txt")?;
+        let result_ft_read = rust_read(file.as_raw_fd(), &mut dest, 100, ft_read);
+        let result_read = rust_read(file.as_raw_fd(), &mut dest, 100, read);
+        assert_eq!(result_ft_read, result_read);
+        Ok(())
+    }
+
+    // #[test]
+    // fn test_read_neg_fd() {
+    //     let s1 = "neg_fd";
+    //     let result_ft_read = rust_read(-1, s1, s1.len(), ft_read);
+    //     let result_read = rust_read(-1, s1, s1.len(), read);
+    //     assert_eq!(result_ft_read, result_read);
+    // }
+
+    // #[test]
+    // fn test_read_other_fd() -> Result<(), Box<dyn std::error::Error>> {
+    //     let file = fs::File::create("read_other_fd.txt")?;
+    //     let file_2 = fs::File::create("ft_read_other_fd.txt")?;
+    //     let s1 = "read_other_fd";
+    //     let result_ft_read = rust_read(file_2.as_raw_fd(), s1, s1.len(), ft_read);
+    //     let result_read = rust_read(file.as_raw_fd(), s1, s1.len(), read);
+    //     assert_eq!(result_ft_read, result_read);
+    //     Ok(())
+    // }
+
+    // #[test]
+    // fn test_read_smaller_nb_char() -> Result<(), Box<dyn std::error::Error>> {
+    //     let file = fs::File::create("read_smaller_nb_char.txt")?;
+    //     let file_2 = fs::File::create("ft_read_smaller_nb_char.txt")?;
+    //     let s1 = "read_smaller_nb_char";
+    //     let result_ft_read = rust_read(file_2.as_raw_fd(), s1, 1, ft_read);
+    //     let result_read = rust_read(file.as_raw_fd(), s1, 1, read);
+    //     assert_eq!(result_ft_read, result_read);
+    //     Ok(())
+    // }
+
+    // #[test]
+    // fn test_read_bigger_nb_char() -> Result<(), Box<dyn std::error::Error>> {
+    //     let file = fs::File::create("ft_read_bigger_nb_char.txt")?;
+    //     let file_2 = fs::File::create("read_bigger_nb_char.txt")?;
+    //     let s1 = "read_bigger_nb_char";
+    //     let result_ft_read = rust_read(file.as_raw_fd(), s1, 100, ft_read);
+    //     let result_read = rust_read(file_2.as_raw_fd(), s1, 100, read);
+    //     assert_eq!(result_ft_read, result_read);
+    //     Ok(())
+    // }
 }
 

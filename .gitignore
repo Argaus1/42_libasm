@@ -1,0 +1,3 @@
+.build
+libasm/libasm.a
+libasm/libasmTester

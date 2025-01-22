@@ -16,3 +16,5 @@ ft_strcpy:
 		mov byte [rdi + rax], 0
 		mov rax, rdi
 		ret 
+
+section .note.GNU-stack noalloc progbits
