@@ -1,3 +1,6 @@
 .build
 libasm/libasm.a
 libasm/libasmTester
+a.out
+ft_strlen.c
+res2
