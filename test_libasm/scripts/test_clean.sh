@@ -2,6 +2,4 @@
 
 cd test_libasm && cargo clean -q
 
-rm -f *.txt
-
-echo "test_libasm cleared"
+rm -f ../src/*.txt
