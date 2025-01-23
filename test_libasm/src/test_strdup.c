@@ -14,7 +14,10 @@ static int	test_strdup(char *s, int i) {
 		printf("\t");
 	!strcmp(libc, libasm) && libasm_errno == libc_errno ? printf("%s\t\tOK\n", BGRN) : printf("%s\t\tKO\n", BRED);
 	printf("%s", RESET);
-	return (!strcmp(libc, libasm) && libasm_errno == libc_errno);
+	int a = !strcmp(libc, libasm) && libasm_errno == libc_errno;
+	free(libc);
+	free(libasm);
+	return (a);
 }
 
 int main(void) {

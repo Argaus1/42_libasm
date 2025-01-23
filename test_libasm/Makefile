@@ -25,6 +25,15 @@ all: $(ALL)
 		rm -f *.d; \
 	done
 
+valgrind: $(ALL)
+	@make -C ../libasm
+	@for src in $(ALL); do \
+		exe=$$(basename $$src .c); \
+		$(CC) $(CFLAGS) $(PREPFLAGS) -o $$exe $$src ../libasm/libasm.a && valgrind ./$$exe; \
+		rm -f $$exe; \
+		rm -f *.d; \
+	done
+
 %.o: %.c
 	@$(DIR_DUP)
 	$(CC) $(CFLAGS) $(PREPFLAGS) -c $< -o $@
