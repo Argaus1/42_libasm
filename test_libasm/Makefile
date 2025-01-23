@@ -1,6 +1,6 @@
 SRC_DIR := src/
 INCLUDES := -I includes
-ALL = strcmp strlen write read
+ALL = strcmp strlen write read strdup strcpy
 ALL	:= $(addprefix test_, $(addsuffix .c, $(ALL)))
 ALL	:= $(addprefix $(SRC_DIR), $(ALL))
 
