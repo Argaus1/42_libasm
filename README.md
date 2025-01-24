@@ -12,6 +12,7 @@ First post cc project at 42
 
 ## On asm
 
+- [The Art if Assembly language](https://www.ic.unicamp.br/~pannain/mc404/aulas/pdfs/Art%20Of%20Intel%20x86%20Assembly.pdf)
 - [Reverse Engineering For Everyone](https://0xinfection.github.io/reversing/reversing-for-everyone.pdf)
 - [System V Application Binary Interface (lengthy, good summary)](https://refspecs.linuxbase.org/elf/x86_64-abi-0.99.pdf)
 - [UAlaska FairBanks course on Assembly](https://www.cs.uaf.edu/2010/fall/cs301/)
