@@ -26,6 +26,7 @@ First post cc project at 42
 - [Optimizing asm(p9 = pitfalls of asm coding)](https://www.agner.org/optimize/optimizing_assembly.pdf)
 - [Guide for making syscalls](https://en.wikibooks.org/wiki/X86_Assembly/Interfacing_with_Linux)
 - [Good video on data alignement](https://www.youtube.com/watch?v=OKjOZBaKlOc)
+- [Stack overflow: Why does the stack need to be aligned?](https://stackoverflow.com/questions/49391001/why-does-the-x86-64-amd64-system-v-abi-mandate-a-16-byte-stack-alignment)
 
 
 # Building the project
